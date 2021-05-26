@@ -6,6 +6,7 @@ import util.UtilColorearPaneles;
 
 import javax.swing.*;
 import java.awt.*;
+import java.util.Scanner;
 
 public class Window extends JFrame
 {
@@ -18,6 +19,10 @@ public class Window extends JFrame
     public Window()
     {
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        this.setLayout(new BorderLayout());
+        this.setTitle("Generador de C\u00f3digo");
+
+        this.setIconImage(ResourceLoader.getImageIcon("image/iconoPrincipal.png").getImage());
 
         panelPrincipal = new JPanel(new BorderLayout());
         inicializarToolBar();
@@ -42,7 +47,7 @@ public class Window extends JFrame
         toolBar = new JToolBar();
         toolBar.setFloatable(false);
 
-        JButton btnVerPlantilla = new JButton(ResourceLoader.getImageIcon("image/binoculares.jpg"));
+        JButton btnVerPlantilla = new JButton(ResourceLoader.getImageIcon("image/ver.png"));
         btnVerPlantilla.setBackground(SystemColor.inactiveCaption);
 
         toolBar.add(btnVerPlantilla);
