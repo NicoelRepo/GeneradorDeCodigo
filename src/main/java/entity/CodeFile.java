@@ -10,7 +10,6 @@ public class CodeFile
     private String path;
     private String name;
     private String extention;
-    private final Map<String, Parameter> mapParameters = new HashMap<>();
     private final List<EstrategyGenerateText> estrategysSecuence = new LinkedList<>();
 
     public String getPath()
@@ -51,11 +50,6 @@ public class CodeFile
     public void setText(StringBuffer text)
     {
         this.text = text;
-    }
-
-    public Map<String, Parameter> getMapParameters()
-    {
-        return mapParameters;
     }
 
     public List<EstrategyGenerateText> getEstrategysSecuence()

@@ -26,6 +26,7 @@ hs_err_pid*
 gradlew.bat
 build/
 .gradle/
+src/main/resources/
 build.gradle
 configuration
 src/main/java/datos/database.xml

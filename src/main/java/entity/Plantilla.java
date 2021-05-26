@@ -1,18 +1,19 @@
 package entity;
 
 import java.io.File;
-import java.util.LinkedList;
 import java.util.List;
 
 public class Plantilla
 {
     final private File raizDirectorio;
     final private List<CodeFile> listCodeFiles;
+    final String name;
 
-    public Plantilla(String path, List<CodeFile> listCodeFiles)
+    public Plantilla(String path, List<CodeFile> listCodeFiles, String name)
     {
-        raizDirectorio = new File(path);
+        this.raizDirectorio = new File(path);
         this.listCodeFiles = listCodeFiles;
+        this.name = name;
     }
 
     public File getRaizDirectorio()
@@ -25,6 +26,8 @@ public class Plantilla
         return listCodeFiles;
     }
 
-
-
+    public String getName()
+    {
+        return name;
+    }
 }

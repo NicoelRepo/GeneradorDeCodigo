@@ -17,13 +17,29 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
+import java.util.stream.Stream;
 
 public class SingletonDatos
 {
     private static SingletonDatos instance;
-    private final List<Plantilla> listaPlantillas = new ArrayList<>();
+    public final List<Plantilla> listaPlantillas = new ArrayList<>();
+
+    public static synchronized SingletonDatos getInstance()
+    {
+        if (instance == null)
+        {
+            instance = new SingletonDatos();
+        }
+        return instance;
+    }
 
     private SingletonDatos()
+    {
+        listaPlantillas.clear();
+        cargarDatos();
+    }
+
+    private void cargarDatos()
     {
         Document document = null;
         try
@@ -38,21 +54,27 @@ public class SingletonDatos
         NodeList listaDePlantillas = document.getElementsByTagName("plantilla");
         for (int i = 0; i < listaDePlantillas.getLength(); i++)
         {
-            NodeList nodosPlantilla = listaDePlantillas.item(i).getChildNodes();
-            List<Node> listaNodos = IntStream.range(0, nodosPlantilla.getLength()).
-                    mapToObj(index -> nodosPlantilla.item(index)).
-                    filter(node -> node.getNodeType() == Node.ELEMENT_NODE).
-                    collect(Collectors.toList());
+            Node nodoPlantilla = listaDePlantillas.item(i);
+
+            String namePlantilla = null;
+            Optional<Node> optionalNode = hijosConCiertoNombre(nodoPlantilla, "name")
+                    .findAny();
+            if (optionalNode.isPresent())
+            {
+                namePlantilla = optionalNode.get().getTextContent();
+            }
+            else
+            {
+                System.out.println("No hay nombre definido");
+            }
 
             // Obtener la raiz
             String raizPlantilla = null;
-            Optional<Node> optionalNode = listaNodos.stream()
-                    .filter(node -> node.getNodeName().equals("root"))
+            optionalNode = hijosConCiertoNombre(nodoPlantilla, "root")
                     .findAny();
             if (optionalNode.isPresent())
             {
                 raizPlantilla = optionalNode.get().getTextContent();
-                System.out.println(raizPlantilla);
             }
             else
             {
@@ -60,22 +82,18 @@ public class SingletonDatos
             }
 
             // Obtener los archivos
-            List<CodeFile> listaArchivos = listaNodos.stream()
-                    .filter(node -> node.getNodeName().equals("file"))
+            List<CodeFile> listaArchivos = hijosConCiertoNombre(nodoPlantilla, "file")
                     .map(SingletonDatos::crearArchivoUsandoNodo)
                     .collect(Collectors.toList());
 
-            this.listaPlantillas.add(new Plantilla(raizPlantilla, listaArchivos));
+            this.listaPlantillas.add(new Plantilla(raizPlantilla, listaArchivos, namePlantilla));
         }
     }
 
     private static CodeFile crearArchivoUsandoNodo(Node nodoArchivo)
     {
         CodeFile codeFile = new CodeFile();
-        NodeList listaNodosDeArchivo = nodoArchivo.getChildNodes();
-        IntStream.range(0, listaNodosDeArchivo.getLength())
-                .mapToObj(index -> listaNodosDeArchivo.item(index))
-                .filter(node -> node.getNodeType() == Node.ELEMENT_NODE)
+        hijosConCiertoNombre(nodoArchivo, null)
                 .forEach(node -> {
                     String nodeName = node.getNodeName();
                     switch (nodeName)
@@ -84,33 +102,30 @@ public class SingletonDatos
                             codeFile.setName(node.getTextContent());
                             break;
 
-                        case "parameters":
-                            NodeList listaNodosParametros = node.getChildNodes();
-                            IntStream.range(0, listaNodosParametros.getLength())
-                                    .mapToObj(index -> listaNodosParametros.item(index))
-                                    .filter(node1 -> node1.getNodeType() == Node.ELEMENT_NODE && node1.getNodeName().equals("param"))
-                                    .forEach(node1 -> {
-                                        codeFile.getMapParameters().put(node1.getTextContent(), null);
-                                    });
-                            break;
-
                         case "path":
                             codeFile.setPath(node.getTextContent());
                             break;
 
                         case "estrategys":
-                            NodeList listaNodosEstrategias = node.getChildNodes();
-                            IntStream.range(0, listaNodosEstrategias.getLength())
-                                    .mapToObj(index -> listaNodosEstrategias.item(index))
-                                    .filter(node1 -> node1.getNodeType() == Node.ELEMENT_NODE && node1.getNodeName().equals("estrategy"))
-                                    .forEach(node1 -> {
+                            hijosConCiertoNombre(node, "estrategy")
+                                    .forEach(nodeEstrategia -> {
+                                        EstrategyGenerateText estrategia = null;
                                         try
                                         {
-                                            codeFile.getEstrategysSecuence().add((EstrategyGenerateText) Class.forName(node1.getTextContent()).newInstance());
+                                            estrategia = (EstrategyGenerateText) Class.forName(
+                                                    nodeEstrategia.getAttributes().getNamedItem("estrategia").getTextContent()
+                                            ).newInstance();
                                         } catch (ClassNotFoundException | IllegalAccessException | InstantiationException e)
                                         {
                                             e.printStackTrace();
                                         }
+                                        final EstrategyGenerateText estrategiaFinal = estrategia;
+                                        codeFile.getEstrategysSecuence().add(estrategia);
+                                        hijosConCiertoNombre(nodeEstrategia, "param")
+                                                .forEach(nodeParam ->
+                                                {
+                                                    estrategiaFinal.getMapParameters().put(nodeEstrategia.getTextContent(), null);
+                                                });
                                     });
                             break;
 
@@ -126,12 +141,11 @@ public class SingletonDatos
         return codeFile;
     }
 
-    public static synchronized SingletonDatos getInstance()
+    private static Stream<Node> hijosConCiertoNombre(Node nodo, String nombre)
     {
-        if (instance == null)
-        {
-            instance = new SingletonDatos();
-        }
-        return instance;
+        NodeList listaNodos = nodo.getChildNodes();
+        return IntStream.range(0, listaNodos.getLength())
+                .mapToObj(index -> listaNodos.item(index))
+                .filter(node -> node.getNodeType() == Node.ELEMENT_NODE && (node.getNodeName().equals(nombre)) || nombre == null);
     }
 }
