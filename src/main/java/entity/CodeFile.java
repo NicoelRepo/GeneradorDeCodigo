@@ -10,7 +10,7 @@ public class CodeFile
     private String path;
     private String name;
     private String extention;
-    private final Set<Parameter> setParameters = new HashSet<Parameter>();
+    private final Map<String, Parameter> mapParameters = new HashMap<>();
     private final List<EstrategyGenerateText> estrategysSecuence = new LinkedList<>();
 
     public String getPath()
@@ -53,9 +53,9 @@ public class CodeFile
         this.text = text;
     }
 
-    public Set<Parameter> getSetParameters()
+    public Map<String, Parameter> getMapParameters()
     {
-        return setParameters;
+        return mapParameters;
     }
 
     public List<EstrategyGenerateText> getEstrategysSecuence()

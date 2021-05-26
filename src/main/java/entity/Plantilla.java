@@ -6,12 +6,13 @@ import java.util.List;
 
 public class Plantilla
 {
-    final File raizDirectorio;
-    final List<CodeFile> listCodeFiles = new LinkedList<CodeFile>();
+    final private File raizDirectorio;
+    final private List<CodeFile> listCodeFiles;
 
-    public Plantilla(String path)
+    public Plantilla(String path, List<CodeFile> listCodeFiles)
     {
         raizDirectorio = new File(path);
+        this.listCodeFiles = listCodeFiles;
     }
 
     public File getRaizDirectorio()
@@ -23,4 +24,7 @@ public class Plantilla
     {
         return listCodeFiles;
     }
+
+
+
 }

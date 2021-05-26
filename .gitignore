@@ -28,7 +28,8 @@ build/
 .gradle/
 build.gradle
 configuration
-database.xml
+src/main/java/datos/database.xml
 gradlew
 settings.gradle
 gradle/
+database.xml

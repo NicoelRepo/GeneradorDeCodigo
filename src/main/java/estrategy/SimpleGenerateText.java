@@ -9,7 +9,7 @@ public class SimpleGenerateText implements EstrategyGenerateText
     public void generate(CodeFile codeFile)
     {
         StringBuffer sb = codeFile.getText();
-        for (Parameter p : codeFile.getSetParameters())
+        for (Parameter p : codeFile.getMapParameters().values())
         {
             replaceAllOcurrences(sb, p.nameParameter, p.value.toString());
         }

@@ -1,6 +1,4 @@
-import entity.CodeFile;
-import entity.Plantilla;
-import logica.GeneradorPrincipal;
+import datos.SingletonDatos;
 
 public class EjecutadorParaPruebas
 {
@@ -8,12 +6,12 @@ public class EjecutadorParaPruebas
     {
         final String raizDirectorio = "C:\\Users\\Nicol\\OneDrive\\Escritorio\\Carpeta de prueba";
 
-        CodeFile codeFile = new CodeFile();
+        SingletonDatos datos = SingletonDatos.getInstance();
 
 
-        Plantilla plantilla = new Plantilla(raizDirectorio);
-
-        GeneradorPrincipal generadorPrincipal = new GeneradorPrincipal();
-        generadorPrincipal.generarUsandoPlantilla();
+//        CodeFile codeFile = new CodeFile();
+//        Plantilla plantilla = new Plantilla(raizDirectorio);
+//        GeneradorPrincipal generadorPrincipal = new GeneradorPrincipal();
+//        generadorPrincipal.generarUsandoPlantilla(plantilla);
     }
 }
