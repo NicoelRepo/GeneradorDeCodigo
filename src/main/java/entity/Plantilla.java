@@ -1,24 +1,21 @@
 package entity;
 
+import estrategy.EstrategyGenerateText;
+
 import java.io.File;
+import java.util.LinkedList;
 import java.util.List;
 
 public class Plantilla
 {
-    final private File raizDirectorio;
     final private List<CodeFile> listCodeFiles;
     final String name;
+    private final List<EstrategyGenerateText> estrategysSecuence = new LinkedList<>();
 
-    public Plantilla(String path, List<CodeFile> listCodeFiles, String name)
+    public Plantilla(List<CodeFile> listCodeFiles, String name)
     {
-        this.raizDirectorio = new File(path);
         this.listCodeFiles = listCodeFiles;
         this.name = name;
-    }
-
-    public File getRaizDirectorio()
-    {
-        return raizDirectorio;
     }
 
     public List<CodeFile> getListCodeFiles()
@@ -29,5 +26,16 @@ public class Plantilla
     public String getName()
     {
         return name;
+    }
+
+    public List<EstrategyGenerateText> getEstrategysSecuence()
+    {
+        return estrategysSecuence;
+    }
+
+    @Override
+    public String toString()
+    {
+        return "Plantilla{" + "listCodeFiles=" + listCodeFiles + ", name='" + name + '\'' + ", estrategysSecuence=" + estrategysSecuence + '}';
     }
 }

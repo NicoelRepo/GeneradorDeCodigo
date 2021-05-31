@@ -1,61 +1,31 @@
 package visual;
 
 import datos.SingletonDatos;
+import net.miginfocom.swing.MigLayout;
 import readersAndWriters.ResourceLoader;
 import util.UtilColorearPaneles;
 
 import javax.swing.*;
 import java.awt.*;
-import java.util.Scanner;
 
 public class Window extends JFrame
 {
     private final SingletonDatos data = SingletonDatos.getInstance();
 
-    JTable tablaPlantillas;
-    JToolBar toolBar;
-    JPanel panelPrincipal;
-
     public Window()
     {
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        this.setLayout(new BorderLayout());
         this.setTitle("Generador de C\u00f3digo");
-
         this.setIconImage(ResourceLoader.getImageIcon("image/iconoPrincipal.png").getImage());
+        this.setSize(new Dimension(300, 400));
+        this.setLocationRelativeTo(null);
 
-        panelPrincipal = new JPanel(new BorderLayout());
-        inicializarToolBar();
-        inicializarTablaPlantillas();
-        panelPrincipal.add(toolBar, BorderLayout.NORTH);
-        panelPrincipal.add(tablaPlantillas, BorderLayout.CENTER);
-        add(panelPrincipal);
+        this.setLayout(new MigLayout("fill,insets 0 10 10 10", "", ""));
+        this.add(new PanelPlantillas(this), "grow");
 
-        this.setSize(new Dimension(500, 500));
+        System.out.println(data.listaPlantillas.get(0));
 
-        UtilColorearPaneles.coloreaComponentes(this.getContentPane(), SystemColor.inactiveCaption, new Class<?>[]{JPanel.class, JViewport.class, JToolBar.class});
-    }
-
-    private void inicializarTablaPlantillas()
-    {
-        tablaPlantillas = new JTable(new ModeloTablaPlantillas(data));
-        tablaPlantillas.setRowHeight(20);
-    }
-
-    private void inicializarToolBar()
-    {
-        toolBar = new JToolBar();
-        toolBar.setFloatable(false);
-
-        JButton btnVerPlantilla = new JButton(ResourceLoader.getImageIcon("image/ver.png"));
-        btnVerPlantilla.setBackground(SystemColor.inactiveCaption);
-
-        toolBar.add(btnVerPlantilla);
-
-    }
-
-    private void cargarTablaPlantillas()
-    {
-
+        UtilColorearPaneles.coloreaComponentes(this.getContentPane(), Color.ORANGE, new Class<?>[]{JPanel.class, JToolBar.class});
+        UtilColorearPaneles.coloreaComponentes(this.getContentPane(), Color.lightGray, new Class[]{JViewport.class});
     }
 }

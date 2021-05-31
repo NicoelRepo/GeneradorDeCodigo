@@ -1,16 +1,10 @@
 package entity;
 
-import estrategy.EstrategyGenerateText;
-
-import java.util.*;
-
 public class CodeFile
 {
     private StringBuffer text;
     private String path;
     private String name;
-    private String extention;
-    private final List<EstrategyGenerateText> estrategysSecuence = new LinkedList<>();
 
     public String getPath()
     {
@@ -32,16 +26,6 @@ public class CodeFile
         this.name = name;
     }
 
-    public String getExtention()
-    {
-        return extention;
-    }
-
-    public void setExtention(String extention)
-    {
-        this.extention = extention;
-    }
-
     public StringBuffer getText()
     {
         return text;
@@ -52,8 +36,4 @@ public class CodeFile
         this.text = text;
     }
 
-    public List<EstrategyGenerateText> getEstrategysSecuence()
-    {
-        return estrategysSecuence;
-    }
 }

@@ -11,7 +11,7 @@ public class FileReader
         String currentLine = null;
         while ((currentLine = reader.readLine()) != null)
         {
-            ret.append(currentLine);
+            ret.append(currentLine).append("\n");
         }
         reader.close();
         return ret;

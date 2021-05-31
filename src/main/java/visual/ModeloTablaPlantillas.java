@@ -8,12 +8,11 @@ import javax.swing.table.TableModel;
 
 public class ModeloTablaPlantillas extends AbstractTableModel implements TableModel
 {
-    final SingletonDatos data;
-    final String[] columns = new String[]{"Plantilla", "Raiz"};
+    final SingletonDatos data = SingletonDatos.getInstance();
+    final String[] columns = new String[]{"Plantilla"};
 
-    public ModeloTablaPlantillas(SingletonDatos datos)
+    public ModeloTablaPlantillas()
     {
-        data = datos;
     }
 
     @Override
@@ -45,10 +44,6 @@ public class ModeloTablaPlantillas extends AbstractTableModel implements TableMo
             {
                 case 0:
                     ret = plantilla.getName();
-                    break;
-
-                case 1:
-                    ret = plantilla.getRaizDirectorio();
                     break;
 
                 default:

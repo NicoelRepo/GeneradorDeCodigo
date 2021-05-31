@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document>
+	<plantilla>
+		<name>CaminitoSRV</name>
+		<estrategy estrategia="estrategy.SimpleGenerateText">
+			<param>NOMBRE</param>
+		</estrategy>
+		<file>
+			<name>#NOMBRE#Process.java</name>
+			<path></path>
+		</file>
+		<file>
+			<name>#NOMBRE#Delegate.java</name>
+			<path></path>
+		</file>
+		<file>
+			<name>#NOMBRE#Local.java</name>
+			<path></path>
+		</file>
+		<file>
+			<name>#NOMBRE#EJB.java</name>
+			<path></path>
+		</file>
+		<file>
+			<name>#NOMBRE#DAO.java</name>
+			<path></path>
+		</file>
+		<file>
+			<name>#NOMBRE#DTO.java</name>
+			<path></path>
+		</file>
+	</plantilla>
+	<plantilla>
+		<name>CaminitoSRV</name>
+		<estrategy estrategia="estrategy.SimpleGenerateText">
+			<param>NOMBRE</param>
+		</estrategy>
+		<file>
+			<name>#NOMBRE#Process.java</name>
+			<path></path>
+		</file>
+		<file>
+			<name>#NOMBRE#Delegate.java</name>
+			<path></path>
+		</file>
+		<file>
+			<name>#NOMBRE#Local.java</name>
+			<path></path>
+		</file>
+		<file>
+			<name>#NOMBRE#EJB.java</name>
+			<path></path>
+		</file>
+		<file>
+			<name>#NOMBRE#DAO.java</name>
+			<path></path>
+		</file>
+		<file>
+			<name>#NOMBRE#DTO.java</name>
+			<path></path>
+		</file>
+	</plantilla>
+</document>

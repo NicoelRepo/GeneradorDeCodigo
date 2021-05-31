@@ -1,6 +1,7 @@
 package datos;
 
 import entity.CodeFile;
+import entity.Parameter;
 import entity.Plantilla;
 import estrategy.EstrategyGenerateText;
 import org.w3c.dom.Document;
@@ -22,7 +23,7 @@ import java.util.stream.Stream;
 public class SingletonDatos
 {
     private static SingletonDatos instance;
-    public final List<Plantilla> listaPlantillas = new ArrayList<>();
+    public static final List<Plantilla> listaPlantillas = new ArrayList<>();
 
     public static synchronized SingletonDatos getInstance()
     {
@@ -35,12 +36,12 @@ public class SingletonDatos
 
     private SingletonDatos()
     {
-        listaPlantillas.clear();
-        cargarDatos();
+        cargarDatosDataBase();
     }
 
-    private void cargarDatos()
+    public static void cargarDatosDataBase()
     {
+        listaPlantillas.clear();
         Document document = null;
         try
         {
@@ -68,25 +69,37 @@ public class SingletonDatos
                 System.out.println("No hay nombre definido");
             }
 
-            // Obtener la raiz
-            String raizPlantilla = null;
-            optionalNode = hijosConCiertoNombre(nodoPlantilla, "root")
-                    .findAny();
-            if (optionalNode.isPresent())
-            {
-                raizPlantilla = optionalNode.get().getTextContent();
-            }
-            else
-            {
-                System.out.println("No hay raiz definida");
-            }
+            List<EstrategyGenerateText> listaDeExtrategias = new ArrayList<>();
+            hijosConCiertoNombre(nodoPlantilla, "estrategy")
+                    .forEach(nodeEstrategia -> {
+                        EstrategyGenerateText estrategia = null;
+                        try
+                        {
+                            estrategia = (EstrategyGenerateText) Class.forName(
+                                    nodeEstrategia.getAttributes().getNamedItem("estrategia").getTextContent()
+                            ).newInstance();
+                        } catch (ClassNotFoundException | IllegalAccessException | InstantiationException e)
+                        {
+                            e.printStackTrace();
+                        }
+                        final EstrategyGenerateText estrategiaFinal = estrategia;
+                        listaDeExtrategias.add(estrategia);
+                        hijosConCiertoNombre(nodeEstrategia, "param")
+                                .forEach(nodeParam ->
+                                {
+                                    String nomberParametro = nodeParam.getTextContent();
+                                    estrategiaFinal.getMapParameters().put(nomberParametro, new Parameter(nomberParametro, null, estrategiaFinal));
+                                });
+                    });
 
             // Obtener los archivos
             List<CodeFile> listaArchivos = hijosConCiertoNombre(nodoPlantilla, "file")
                     .map(SingletonDatos::crearArchivoUsandoNodo)
                     .collect(Collectors.toList());
 
-            this.listaPlantillas.add(new Plantilla(raizPlantilla, listaArchivos, namePlantilla));
+            Plantilla plantilla = new Plantilla(listaArchivos, namePlantilla);
+            plantilla.getEstrategysSecuence().addAll(listaDeExtrategias);
+            listaPlantillas.add(plantilla);
         }
     }
 
@@ -104,33 +117,6 @@ public class SingletonDatos
 
                         case "path":
                             codeFile.setPath(node.getTextContent());
-                            break;
-
-                        case "estrategys":
-                            hijosConCiertoNombre(node, "estrategy")
-                                    .forEach(nodeEstrategia -> {
-                                        EstrategyGenerateText estrategia = null;
-                                        try
-                                        {
-                                            estrategia = (EstrategyGenerateText) Class.forName(
-                                                    nodeEstrategia.getAttributes().getNamedItem("estrategia").getTextContent()
-                                            ).newInstance();
-                                        } catch (ClassNotFoundException | IllegalAccessException | InstantiationException e)
-                                        {
-                                            e.printStackTrace();
-                                        }
-                                        final EstrategyGenerateText estrategiaFinal = estrategia;
-                                        codeFile.getEstrategysSecuence().add(estrategia);
-                                        hijosConCiertoNombre(nodeEstrategia, "param")
-                                                .forEach(nodeParam ->
-                                                {
-                                                    estrategiaFinal.getMapParameters().put(nodeEstrategia.getTextContent(), null);
-                                                });
-                                    });
-                            break;
-
-                        case "extension":
-                            codeFile.setExtention(node.getTextContent());
                             break;
 
                         default:
