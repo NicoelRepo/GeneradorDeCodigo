@@ -24,3 +24,9 @@ hs_err_pid*
 
 .idea/
 build/
+.classpath
+.gradle/6.8/
+.project
+.vscode/
+bin/
+.gradle/
